@@ -14,5 +14,5 @@ jobs:
             sudo gcloud auth activate-service-account --key-file=${HOME}/gcp-service-key.json
             sudo gcloud --quiet config set project ${GCP_PROJECT_ID}
       - run:
-        name: Deploy Cloud Functions
-        command: gcloud beta functions deploy fetch-updated-jrdb --runtime python37 --trigger-topic cron-hourly --memory 128M --entry-point main
+          name: Deploy Cloud Functions
+          command: gcloud beta functions deploy fetch-updated-jrdb --runtime python37 --trigger-topic cron-hourly --memory 128M --entry-point main
