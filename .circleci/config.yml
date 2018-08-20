@@ -3,6 +3,9 @@ jobs:
   build:
     docker:
       - image: google/cloud-sdk
+    branches:
+      only:
+        - master
     steps:
       - run:
           name: Store Service Account
