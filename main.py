@@ -1,21 +1,15 @@
 import os
-import requests
-from lxml import html
-from urllib.parse import urljoin
 from google.cloud import pubsub_v1
+from jrdb.client import JRDBClient
+from jrdb import urlcodec
 
 
 def main(data, context):
-    URL = 'http://www.jrdb.com/member/data/'
     auth = (os.environ['JRDB_ID'], os.environ['JRDB_PW'])
-    session = requests.Session()
-    session.auth = auth
-    res = session.get(URL)
-    page = html.fromstring(res.content)
-    urls = ','.join([urljoin(URL, x)
-                    for x in page.xpath('//a/@href') if x.endswith('zip')])
+    jrdbclient = JRDBClient(auth)
+    urls = jrdbclient.fetch_latest_urls()
 
     print(urls)
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path('otomarukanta-a', 'jrdb-urls')
-    publisher.publish(topic_path, urls.encode('utf-8'))
+    publisher.publish(topic_path, urlcodec.encode(urls))
